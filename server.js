@@ -5,6 +5,7 @@ var connections = []
 app.get('/', function(req, res){
   res.sendFile(__dirname + '/page.html');
 });
+var guessWord = 'dog';
 
 app.use(express.static('public'));
 
@@ -16,7 +17,12 @@ io.on('connection', function(socket){
   connections.push(socket.id);
   console.log('somebody connected: ' + socket.id);
   socket.on('chat message', function(msg){
-    io.emit('chat message', msg);
+    // CHECK IF GUESSED WORD WAS CORRECT
+    if(msg == guessWord){
+      io.emit('chat message', '**CORRECT**');
+    }else{
+      io.emit('chat message', msg);
+    }
   });
   socket.on('username', function (name){
     io.emit('username', name)
