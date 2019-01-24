@@ -1,17 +1,22 @@
 var express = require('express');
-var app = express();
 var socket = require('socket.io');
+var app = express();
 
-app.get('/', (req, res)=>{
-    res.sendFile(__dirname + '/page.html');
-})
+app.get('/', function(req, res){
+  res.sendFile(__dirname + '/page.html');
+});
 
-server = app.listen(process.env.port || 3000, console.log('running on port 3000'));
+app.use(express.static('public'));
+
+var server = app.listen(process.env.PORT || 3000, console.log("Site is up on port 3000"))
 var io = socket(server)
-io.on("connection", (socket)=>{
-    console.log("user connected")
-    socket.on('draw', (data)=>{
-        console.log(data)
-        io.emit('draw', (data))
-    })
-})
+
+io.on('connection', function(socket){
+  console.log('somebody connected: ' + socket.id);
+  socket.on('chat message', function(msg){
+    io.emit('chat message', msg);
+  });
+  socket.on('username', function (name){
+    io.emit('username', name)
+  })
+});
