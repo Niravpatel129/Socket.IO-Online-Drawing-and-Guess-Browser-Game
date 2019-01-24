@@ -5,7 +5,8 @@ form button { width: 9%; background: white; border: none; padding: 10px; }
 h1{
     text-align: center;
     padding: 20px;
-    margin-left: 100px;
+    position: absolute;
+    left: 650px;
 }
 
 
