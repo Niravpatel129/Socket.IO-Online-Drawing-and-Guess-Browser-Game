@@ -126,12 +126,13 @@ function init() {
 
 $(function () {
     person = 'bill';
+    var person = prompt("Whats Your Name?");
     socket.emit('username', person);
     socket.on('username', function (value) {
         if (value == "") {
-            personname = "guest"
+            person = "Guest"
         } else {
-            personname = value;
+            person = value;
         }
     })
     $('form').submit(function (e) {
@@ -141,14 +142,12 @@ $(function () {
         return false;
     });
     socket.on('chat message', function (msg) {
-        console.log(msg);
         if(msg == '**CORRECT**'){
-            console.log('asd')
             $( "input" ).prop( "disabled", true ); //Disable Typing
             $("input").attr("placeholder", "YOU GOT IT RIGHT!!!!!");
             $("input").css("background-color", "yellow")
         }else{
-            message2 = "<b>" + personname + "</b>" + ": " + msg;
+            message2 = "<b>" + person + "</b>" + ": " + msg;
             $('#messages').append($('<ol>').html(message2));
         }
 

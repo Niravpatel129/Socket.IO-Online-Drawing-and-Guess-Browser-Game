@@ -25,7 +25,7 @@ io.on('connection', function(socket){
     }
   });
   socket.on('username', function (name){
-    io.emit('username', name)
+    socket.emit('username', name)
   })
   socket.on('draw', function(input){
     io.emit('draw', input);
