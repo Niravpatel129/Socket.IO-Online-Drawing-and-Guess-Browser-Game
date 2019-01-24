@@ -1,5 +1,12 @@
 personname = "guest"
-//DRAWING
+var socket = io();
+socket.on('draw', function(data){
+    ctx.beginPath();
+    ctx.moveTo(data.prevX, data.prevY);
+    ctx.lineTo(data.currX, data.currY);
+    ctx.stroke()
+    ctx.closePath();
+    })
 var canvas, ctx, flag = false,
 prevX = 0,
 currX = 0,
@@ -10,6 +17,7 @@ dot_flag = false;
 var x = "black",
 y = 2;
 
+//DRAWING Function Below
 function init() {
 canvas = document.getElementById('can');
 ctx = canvas.getContext("2d");
@@ -30,35 +38,6 @@ canvas.addEventListener("mouseout", function (e) {
 }, false);
 }
 
-function color(obj) {
-switch (obj.id) {
-    case "green":
-        x = "green";
-        break;
-    case "blue":
-        x = "blue";
-        break;
-    case "red":
-        x = "red";
-        break;
-    case "yellow":
-        x = "yellow";
-        break;
-    case "orange":
-        x = "orange";
-        break;
-    case "black":
-        x = "black";
-        break;
-    case "white":
-        x = "white";
-        break;
-}
-if (x == "white") y = 14;
-else y = 2;
-
-}
-
 function draw() {
 ctx.beginPath();
 ctx.moveTo(prevX, prevY);
@@ -67,6 +46,7 @@ ctx.strokeStyle = x;
 ctx.lineWidth = y;
 ctx.stroke();
 ctx.closePath();
+
 }
 
 function erase() {
@@ -99,7 +79,9 @@ if (res == 'down') {
         ctx.fillRect(currX, currY, 2, 2);
         ctx.closePath();
         dot_flag = false;
+
     }
+    
 }
 if (res == 'up' || res == "out") {
     flag = false;
@@ -112,8 +94,13 @@ if (res == 'move') {
         currY = e.clientY - canvas.offsetTop;
         draw();
     }
+    
+    socket.emit('draw', {currX, currY, prevX, prevY});
+
 }
-}   
+
+}
+
 
 //
 //
@@ -121,7 +108,6 @@ if (res == 'move') {
 
       $(function () {
         console.log('somebody once told me the world')
-        var socket = io();
         person = 'bill';
         socket.emit('username', person);
         socket.on('username', function(value){
