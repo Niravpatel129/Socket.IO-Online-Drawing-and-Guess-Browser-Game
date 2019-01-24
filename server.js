@@ -6,7 +6,8 @@ app.get('/', function(req, res){
   res.sendFile(__dirname + '/page.html');
 });
 var guessWord = 'dog';
-
+var nickname;
+var users = [];
 app.use(express.static('public'));
 
 var server = app.listen(process.env.PORT || 3000, console.log("Site is up on port 3000"))
@@ -14,8 +15,9 @@ var io = socket(server)
 var clients = io.sockets.clients();
 
 io.on('connection', function(socket){
+
+
   connections.push(socket.id);
-  console.log('somebody connected: ' + socket.id);
   socket.on('chat message', function(msg){
     // CHECK IF GUESSED WORD WAS CORRECT
     if(msg == guessWord){
@@ -24,9 +26,10 @@ io.on('connection', function(socket){
       io.emit('chat message', msg);
     }
   });
-  socket.on('username', function (name){
-    socket.emit('username', name)
-  })
+
+
+
+
   socket.on('draw', function(input){
     io.emit('draw', input);
   })

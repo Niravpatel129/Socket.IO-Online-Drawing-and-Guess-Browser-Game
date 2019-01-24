@@ -125,32 +125,28 @@ function init() {
 
 
 $(function () {
-    person = 'bill';
-    var person = prompt("Whats Your Name?");
-    socket.emit('username', person);
-    socket.on('username', function (value) {
-        if (value == "") {
-            person = "Guest"
-        } else {
-            person = value;
-        }
-    })
+    nickname = 'bill';
+
+
+    
     $('form').submit(function (e) {
         e.preventDefault(); // prevents page reloading
+        msg = $('#m').val();
+        console.log(msg)
         socket.emit('chat message', $('#m').val());
         $('#m').val('');
         return false;
     });
     socket.on('chat message', function (msg) {
-        if(msg == '**CORRECT**'){
-            $( "input" ).prop( "disabled", true ); //Disable Typing
+        if (msg == '**CORRECT**') {
+            $("input").prop("disabled", true); //Disable Typing
             $("input").attr("placeholder", "YOU GOT IT RIGHT!!!!!");
             $("input").css("background-color", "yellow")
-        }else{
-            message2 = "<b>" + person + "</b>" + ": " + msg;
+        } else {
+            message2 = "<b>" + nickname + "</b>" + ": " + msg;
             $('#messages').append($('<ol>').html(message2));
         }
 
-        
+
     });
 });
